@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+mapper 用于定义一个映射配置文件的根节点
+namespace属性是用来配置命名空间，主要进行session级别的缓存管理
+命名空间默认情况下，使用我们当前操作的实体类的全路径
+-->
+<mapper namespace="entity.thing">
+    <!--<select id="findThing" resultType="entity.thing">-->
+    <select id="findThing" resultMap="findthing">
+        select * from thing
+        <if test="id!=null">
+          where id=#{id}
+        </if>
+    </select>
+
+    <resultMap id="findthing" type="entity.thing">
+        <result column="me" property="wo"></result>
+        <result column="Dtime" property="dotime"></result>
+    </resultMap>
+
+    <sql id="thing_fields">
+        me,others,gob,Rtime,Dtime,place,content
+    </sql>
+
+    <insert id="addThing" useGeneratedKeys="true" keyProperty="id">
+        insert into thing(<include refid="thing_fields"></include>)
+        value(#{wo},#{others},#{gob},#{rtime},#{dotime},#{place},#{content})
+    </insert>
+    <!--<update id="updatething">-->
+        <!--update thing set me=#{wo},-->
+        <!--others=#{others},-->
+        <!--gob=#{gob},-->
+        <!--Dtime=#{dotime},-->
+        <!--place=#{place},-->
+        <!--content=#{content}-->
+        <!--where id=#{id}-->
+    <!--</update>-->
+    <update id="updatething">
+        update thing
+        <set>
+            <if test="id!=null">id=#{id},</if>
+            <if test="wo!=null">me=#{wo},</if>
+            <if test="others!=null">others=#{others},</if>
+            <if test="gob!=null">gob=#{gob},</if>
+            <if test="rtime!=null">rtime=#{rtime},</if>
+            <if test="dotime!=null">Dtime=#{dotime},</if>
+            <if test="place!=null">place=#{place},</if>
+            <if test="content!=null">content=#{content},</if>
+            <if test="ach!=null">ach=#{ach},</if>
+        </set>
+        where id=#{id}
+    </update>
+    <delete id="delthing">
+        delete from thing where id=#{id}
+    </delete>
+</mapper>
